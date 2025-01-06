@@ -7,6 +7,10 @@ Create a Full-Stack web application using Next.js, Typescipt, Mongo.DB, Sass, et
 
 - Frontend developer/ AI/ML developer
 
+### Triton Crowley
+
+- Database integration 
+
 ## Tech Stack
 
 ### Frontend
@@ -24,4 +28,3 @@ Create a Full-Stack web application using Next.js, Typescipt, Mongo.DB, Sass, et
 ### APIs
 
 ### AI / ML integration
-
