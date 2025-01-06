@@ -28,4 +28,3 @@ Create a Full-Stack web application using Next.js, Typescipt, Mongo.DB, Sass, et
 ### APIs
 
 ### AI / ML integration
-
