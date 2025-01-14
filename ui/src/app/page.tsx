@@ -6,12 +6,14 @@ import SearchSection from "@/sections/SearchSection";
 import dynamic from 'next/dynamic';
 import 'leaflet/dist/leaflet.css';
 
+
 const DynamicMap = dynamic(() => import('@/sections/Map'), {
   ssr: false,
 });
 
 export default function Home({ params }: { params: { event: string } }) {
-  return (
+
+    return (
     <>
       <Header />
       <Hero />
