@@ -4,6 +4,12 @@ import { Header } from "@/sections/Header";
 import { Hero } from "@/sections/Hero";
 import MapSection from "@/sections/MapSection";
 import 'leaflet/dist/leaflet.css';
+import dynamic from "next/dynamic";
+
+const DynamicMap = dynamic(() => import('@/sections/MapSection'), {
+    ssr: false,
+});
+
 
 export default function Home({ params }: { params: { event: string }}) {
 
@@ -12,7 +18,7 @@ export default function Home({ params }: { params: { event: string }}) {
       <Header />
       <Hero />
       <div>
-        <MapSection />
+        <DynamicMap />
       </div>
     </>
   );
