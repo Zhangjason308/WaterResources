@@ -2,11 +2,18 @@ import Image from 'next/image';
 import React, { useEffect, useState, useRef } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import searchIcon from '@/assets/search-image.png';
-import {MapContainer, Marker, Popup, TileLayer, useMap} from "react-leaflet";
-import { Map } from 'leaflet';
+import getLocImage from '@/assets/my-location.png'
+import mapPin from '@/assets/placeholder_map_pin.png'
+import {MapContainer, TileLayer, useMap} from "react-leaflet";
+import L, {icon, Map} from 'leaflet';
 
 const libraries = ["places"]
+const mapIcon = icon({
+    iconUrl: mapPin.src,
+    iconSize: [32, 32]
+});
 
+let currentLocationLayer: L.Marker;
 
 function MapSection() {
     // Place Autocomplete API stuff
@@ -24,6 +31,7 @@ function MapSection() {
 
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
+        // @ts-ignore
         libraries,
     });
 
@@ -117,9 +125,13 @@ function MapSection() {
     }
 
     function mapFly(lat: number, long: number) {
+        if (!currentLocationLayer) {
+            currentLocationLayer = L.marker([lat, long], {icon: mapIcon}).addTo(map);
+        }
         if (lat && long) {
             map.flyTo([lat, long], 16);
         }
+        currentLocationLayer.setLatLng([lat, long]);
     }
 
     function showPosition(position: any) {
@@ -153,7 +165,7 @@ function MapSection() {
                                required/>
                         <button className='p-0 text-white rounded-lg'
                                 onClick={getLoc}>
-                            <Image src={placeholderImage} width={30} height={30} alt='Search Icon'/>
+                            <Image src={getLocImage} width={30} height={30} alt='Search Icon'/>
                         </button>
                     </div>
                     <button className=' p-3 bg-black w-full mt-5 text-white rounded-lg'
