@@ -5,7 +5,7 @@ import searchIcon from '@/assets/search-image.png';
 import {MapContainer, Marker, Popup, TileLayer, useMap} from "react-leaflet";
 import { Map } from 'leaflet';
 
-const libraries: any = ["places"]
+const libraries = ["places"]
 
 
 function MapSection() {
@@ -113,8 +113,26 @@ function MapSection() {
     function handleClick(){
         let lat:any = input.latitude
         let long:any = input.longitude
+        mapFly(lat, long)
+    }
+
+    function mapFly(lat: number, long: number) {
         if (lat && long) {
             map.flyTo([lat, long], 16);
+        }
+    }
+
+    function showPosition(position: any) {
+
+        mapFly(+position.coords.latitude, +position.coords.longitude)
+    }
+
+    function getLoc() {
+        if (navigator.geolocation) {
+            // @ts-ignore
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            console.log("Geolocation is not supported");
         }
     }
 
@@ -133,6 +151,10 @@ function MapSection() {
                                value={input.streetAddress || ""}
                                onChange={handleChange}
                                required/>
+                        <button className='p-0 text-white rounded-lg'
+                                onClick={getLoc}>
+                            <Image src={placeholderImage} width={30} height={30} alt='Search Icon'/>
+                        </button>
                     </div>
                     <button className=' p-3 bg-black w-full mt-5 text-white rounded-lg'
                             onClick={handleClick}>Search
