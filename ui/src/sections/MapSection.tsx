@@ -5,7 +5,7 @@ import searchIcon from '@/assets/search-image.png';
 import {MapContainer, Marker, Popup, TileLayer, useMap} from "react-leaflet";
 import { Map } from 'leaflet';
 
-const libraries = ["places"]
+const libraries: any = ["places"]
 
 
 function MapSection() {
@@ -23,11 +23,11 @@ function MapSection() {
     };
 
     const {isLoaded, loadError} = useLoadScript({
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
         libraries,
     });
 
-    const [input, setInput] = useState({});
+    const [input, setInput] = useState<{ streetAddress?: string; latitude?: number; longitude?: number }>({});
     const inputRef = useRef(null);
 
     useEffect(() => {
@@ -40,9 +40,11 @@ function MapSection() {
             fields: ["address_components", "geometry"],
         };
 
-        const autocomplete = new google.maps.places.Autocomplete(inputRef.current, options);
-        autocomplete.set
-        autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
+        if (inputRef.current) {
+            const autocomplete = new google.maps.places.Autocomplete(inputRef.current as HTMLInputElement, options);
+            autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
+            autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
+        }
 
         // return () => autocomplete.removeListener("place_changed", handlePlaceChanged);
     }, [isLoaded, loadError]);
@@ -78,7 +80,7 @@ function MapSection() {
         };
 
         for (const component of addressComponents) {
-            const componentType = component.types[0];
+            const componentType = component.types[0] as keyof typeof componentMap;
             if (componentMap.hasOwnProperty(componentType)) {
                 componentMap[componentType] = component.long_name;
             }
