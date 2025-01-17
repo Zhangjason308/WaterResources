@@ -2,11 +2,18 @@ import Image from 'next/image';
 import React, { useEffect, useState, useRef } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import searchIcon from '@/assets/search-image.png';
-import {MapContainer, Marker, Popup, TileLayer, useMap} from "react-leaflet";
-import { Map } from 'leaflet';
+import getLocImage from '@/assets/my-location.png'
+import mapPin from '@/assets/placeholder_map_pin.png'
+import {MapContainer, TileLayer, useMap} from "react-leaflet";
+import L, {icon, Map} from 'leaflet';
 
-const libraries: any = ["places"]
+const libraries = ["places"]
+const mapIcon = icon({
+    iconUrl: mapPin.src,
+    iconSize: [32, 32]
+});
 
+let currentLocationLayer: L.Marker;
 
 function MapSection() {
     // Place Autocomplete API stuff
@@ -24,6 +31,7 @@ function MapSection() {
 
     const {isLoaded, loadError} = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
+        // @ts-ignore
         libraries,
     });
 
@@ -113,8 +121,30 @@ function MapSection() {
     function handleClick(){
         let lat:any = input.latitude
         let long:any = input.longitude
+        mapFly(lat, long)
+    }
+
+    function mapFly(lat: number, long: number) {
+        if (!currentLocationLayer) {
+            currentLocationLayer = L.marker([lat, long], {icon: mapIcon}).addTo(map);
+        }
         if (lat && long) {
             map.flyTo([lat, long], 16);
+        }
+        currentLocationLayer.setLatLng([lat, long]);
+    }
+
+    function showPosition(position: any) {
+
+        mapFly(+position.coords.latitude, +position.coords.longitude)
+    }
+
+    function getLoc() {
+        if (navigator.geolocation) {
+            // @ts-ignore
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            console.log("Geolocation is not supported");
         }
     }
 
@@ -122,7 +152,7 @@ function MapSection() {
         <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5'>
             <div className='col-span-1'>
                 <div className='p-2 md:p-6 border-[2px] rounded-xl'>
-                    <p className='text-[20px] font-bold'>Find a pee pee spot</p>
+                    <p className='text-[20px] font-bold'>Find a resource near you</p>
                     <div className='bg-slate-200 p-3 rounded-lg mt-3 flex items-center gap-4'>
                         <Image src={searchIcon} width={24} height={24} alt='Search Icon'/>
                         <input type='text'
@@ -133,6 +163,10 @@ function MapSection() {
                                value={input.streetAddress || ""}
                                onChange={handleChange}
                                required/>
+                        <button className='p-0 text-white rounded-lg'
+                                onClick={getLoc}>
+                            <Image src={getLocImage} width={30} height={30} alt='Search Icon'/>
+                        </button>
                     </div>
                     <button className=' p-3 bg-black w-full mt-5 text-white rounded-lg'
                             onClick={handleClick}>Search
