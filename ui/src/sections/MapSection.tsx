@@ -152,7 +152,7 @@ function MapSection() {
         <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5'>
             <div className='col-span-1'>
                 <div className='p-2 md:p-6 border-[2px] rounded-xl'>
-                    <p className='text-[20px] font-bold'>Find a pee pee spot</p>
+                    <p className='text-[20px] font-bold'>Find a resource near you</p>
                     <div className='bg-slate-200 p-3 rounded-lg mt-3 flex items-center gap-4'>
                         <Image src={searchIcon} width={24} height={24} alt='Search Icon'/>
                         <input type='text'
