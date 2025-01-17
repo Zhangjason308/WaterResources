@@ -15,11 +15,9 @@ export default function Home({ params }: { params: { event: string }}) {
 
     return (
     <>
-      <Header />
-      <Hero />
-      <div>
+        <Header />
+        <Hero />
         <DynamicMap />
-      </div>
     </>
   );
 }
