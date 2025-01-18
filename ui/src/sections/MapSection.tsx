@@ -6,7 +6,7 @@ import getLocImage from '@/assets/my-location.png';
 import mapPin from '@/assets/placeholder_map_pin.png';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L, { icon, Map } from 'leaflet';
-import { getLocations } from './DatabaseSection'; // Update the path to your `getLocations` file
+import { fetchLocationData, Washroom_Location, Water_Fountain_Location} from './LocationFunction';
 
 const libraries = ["places"];
 const mapIcon = icon({
@@ -17,8 +17,25 @@ const mapIcon = icon({
 let currentLocationLayer: L.Marker;
 
 function MapSection() {
-    // Retrieve location data and fetchData function
-    const { washroomLocations, waterFountainLocations, loading, fetchData } = getLocations();
+    const [washroomLocations, setWashroomLocations] = useState<Washroom_Location[]>([]);
+    const [fountainLocations, setFountainLocations] = useState<Water_Fountain_Location[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const { washroomLocations, fountainLocations } = await fetchLocationData();
+            setWashroomLocations(washroomLocations);
+            setFountainLocations(fountainLocations);
+          } catch (error) {
+            console.error('Error fetching locations:', error);
+          } finally {
+            setLoading(false);
+          }
+        };
+    
+        fetchData();
+    }, []);
 
     const center = {
         lat: 45.25350,
@@ -54,11 +71,6 @@ function MapSection() {
             autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
         }
     }, [isLoaded, loadError]);
-
-    useEffect(() => {
-        console.log("Fetching locations...");
-        fetchData();
-    }, [fetchData]);
 
     const handleChange = (event: any) => {
         const { name, value } = event.target;
@@ -198,7 +210,7 @@ function MapSection() {
                         {washroomLocations.map((location) => (
                             <Marker
                                 key={location._id}
-                                position={[location.X_COORDINATE, location.Y_COORDINATE]} // Ensure correct order: [lat, lng]
+                                position={[location.X_COORDINATE, location.Y_COORDINATE]} 
                                 icon={mapIcon}
                             >
                                 <Popup>
