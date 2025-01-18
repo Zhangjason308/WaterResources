@@ -216,8 +216,27 @@ function MapSection() {
                                     icon={mapIcon}
                                 >
                                     <Popup>
-                                        <h3>{location.NAME}</h3>
-                                        <p>{location.ADDRESS}</p>
+                                    <div>
+                                        <h2><u><strong>{location.NAME}</strong></u></h2>
+                                        <ul>
+                                            <li><strong>Address: </strong>{location.ADDRESS}</li>
+                                            <li>
+                                                <strong>Hours: </strong>
+                                                <details>
+                                                    <summary>View Hours</summary>
+                                                    <ul>
+                                                        <li>Monday: {location.HOURS_MONDAY_OPEN} - {location.HOURS_MONDAY_CLOSED}</li>
+                                                        <li>Tuesday: {location.HOURS_TUESDAY_OPEN} - {location.HOURS_TUESDAY_CLOSED}</li>
+                                                        <li>Wednesday: {location.HOURS_WEDNESDAY_OPEN} - {location.HOURS_WEDNESDAY_CLOSED}</li>
+                                                        <li>Thursday: {location.HOURS_THURSDAY_OPEN} - {location.HOURS_THURSDAY_CLOSED}</li>
+                                                        <li>Friday: {location.HOURS_FRIDAY_OPEN} - {location.HOURS_FRIDAY_CLOSED}</li>
+                                                        <li>Saturday: {location.HOURS_SATURDAY_OPEN} - {location.HOURS_SATURDAY_CLOSED}</li>
+                                                        <li>Sunday: {location.HOURS_SUNDAY_OPEN} - {location.HOURS_SUNDAY_CLOSED}</li>
+                                                    </ul>
+                                                </details>
+                                            </li>
+                                        </ul>
+                                    </div>
                                     </Popup>
                                 </Marker>
                             ))}
