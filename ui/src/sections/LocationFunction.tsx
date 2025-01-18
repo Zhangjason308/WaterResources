@@ -1,3 +1,4 @@
+import { debug } from "console";
 import { GetServerSideProps } from "next";
 
 export interface Washroom_Location {
@@ -68,6 +69,7 @@ export async function fetchLocationData(){
     const data = await res.json();
     washroomLocations = data.washrooms;
     fountainLocations = data.waterFountains;
+    console.log(washroomLocations); 
   }catch (error){
     console.error('Somthing went wrong fetching the data: ', error);
   }

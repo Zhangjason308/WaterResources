@@ -197,30 +197,34 @@ function MapSection() {
                         overflow: 'hidden',
                     }}
                 >
-                    <MapContainer
-                        style={{ height: '100%', width: '100%' }}
-                        center={center}
-                        zoom={13}
-                        scrollWheelZoom={true}
-                    >
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        {washroomLocations.map((location) => (
-                            <Marker
-                                key={location._id}
-                                position={[location.X_COORDINATE, location.Y_COORDINATE]} 
-                                icon={mapIcon}
-                            >
-                                <Popup>
-                                    <h3>{location.NAME}</h3>
-                                    <p>{location.ADDRESS}</p>
-                                </Popup>
-                            </Marker>
-                        ))}
-                    </MapContainer>
-                    {loading && <p>Loading locations...</p>}
+                    {!loading ? (
+                        <MapContainer
+                            style={{ height: '100%', width: '100%' }}
+                            center={center}
+                            zoom={13}
+                            scrollWheelZoom={true}
+                        >
+                            <TileLayer
+                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <GetMap />
+                            {washroomLocations.map((location) => (
+                                <Marker
+                                    key={location._id}
+                                    position={[location.Y_COORDINATE, location.X_COORDINATE]} 
+                                    icon={mapIcon}
+                                >
+                                    <Popup>
+                                        <h3>{location.NAME}</h3>
+                                        <p>{location.ADDRESS}</p>
+                                    </Popup>
+                                </Marker>
+                            ))}
+                        </MapContainer>
+                    ) : (
+                        <p>Loading map data...</p>
+                    )}
                 </div>
             </div>
         </div>
