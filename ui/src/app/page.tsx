@@ -18,6 +18,7 @@ export default function Home({ params }: { params: { event: string }}) {
         <Header />
         <Hero />
         <DynamicMap />
+        
     </>
   );
 }

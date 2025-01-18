@@ -2,12 +2,13 @@ import Image from 'next/image';
 import React, { useEffect, useState, useRef } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import searchIcon from '@/assets/search-image.png';
-import getLocImage from '@/assets/my-location.png'
-import mapPin from '@/assets/placeholder_map_pin.png'
-import {MapContainer, TileLayer, useMap} from "react-leaflet";
-import L, {icon, Map} from 'leaflet';
+import getLocImage from '@/assets/my-location.png';
+import mapPin from '@/assets/placeholder_map_pin.png';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import L, { icon, Map } from 'leaflet';
+import { getLocations } from './DatabaseSection'; // Update the path to your `getLocations` file
 
-const libraries = ["places"]
+const libraries = ["places"];
 const mapIcon = icon({
     iconUrl: mapPin.src,
     iconSize: [32, 32]
@@ -16,20 +17,15 @@ const mapIcon = icon({
 let currentLocationLayer: L.Marker;
 
 function MapSection() {
-    // Place Autocomplete API stuff
+    // Retrieve location data and fetchData function
+    const { washroomLocations, waterFountainLocations, loading, fetchData } = getLocations();
+
     const center = {
         lat: 45.25350,
         lng: -75.73308
-    }
-
-    const ottawa = {
-        north: center.lat + 0.55,
-        south: center.lat - 0.55,
-        east: center.lng + 0.55,
-        west: center.lng - 0.55,
     };
 
-    const {isLoaded, loadError} = useLoadScript({
+    const { isLoaded, loadError } = useLoadScript({
         googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY || '',
         // @ts-ignore
         libraries,
@@ -42,29 +38,36 @@ function MapSection() {
         if (!isLoaded || loadError) return;
 
         const options = {
-            bounds: ottawa,
-            strictBounds: true, // restrict to ottawa area
-            componentRestrictions: {country: "ca"},
+            bounds: {
+                north: center.lat + 0.55,
+                south: center.lat - 0.55,
+                east: center.lng + 0.55,
+                west: center.lng - 0.55,
+            },
+            strictBounds: true,
+            componentRestrictions: { country: "ca" },
             fields: ["address_components", "geometry"],
         };
 
         if (inputRef.current) {
             const autocomplete = new google.maps.places.Autocomplete(inputRef.current as HTMLInputElement, options);
             autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
-            autocomplete.addListener("place_changed", () => handlePlaceChanged(autocomplete));
         }
-
-        // return () => autocomplete.removeListener("place_changed", handlePlaceChanged);
     }, [isLoaded, loadError]);
 
+    useEffect(() => {
+        console.log("Fetching locations...");
+        fetchData();
+    }, [fetchData]);
+
     const handleChange = (event: any) => {
-        const {name, value} = event.target;
-        setInput((values) => ({...values, [name]: value}));
+        const { name, value } = event.target;
+        setInput((values) => ({ ...values, [name]: value }));
     };
 
     const handlePlaceChanged = async (address: any) => {
         if (!isLoaded) return;
-        const place = address.getPlace()
+        const place = address.getPlace();
 
         if (!place || !place.geometry) {
             setInput({});
@@ -114,19 +117,19 @@ function MapSection() {
     let map: Map;
 
     function GetMap() {
-        map = useMap()
-        return null
+        map = useMap();
+        return null;
     }
 
-    function handleClick(){
-        let lat:any = input.latitude
-        let long:any = input.longitude
-        mapFly(lat, long)
+    function handleClick() {
+        const lat = input.latitude;
+        const long = input.longitude;
+        mapFly(lat, long);
     }
 
     function mapFly(lat: number, long: number) {
         if (!currentLocationLayer) {
-            currentLocationLayer = L.marker([lat, long], {icon: mapIcon}).addTo(map);
+            currentLocationLayer = L.marker([lat, long], { icon: mapIcon }).addTo(map);
         }
         if (lat && long) {
             map.flyTo([lat, long], 16);
@@ -135,13 +138,11 @@ function MapSection() {
     }
 
     function showPosition(position: any) {
-
-        mapFly(+position.coords.latitude, +position.coords.longitude)
+        mapFly(position.coords.latitude, position.coords.longitude);
     }
 
     function getLoc() {
         if (navigator.geolocation) {
-            // @ts-ignore
             navigator.geolocation.getCurrentPosition(showPosition);
         } else {
             console.log("Geolocation is not supported");
@@ -154,49 +155,62 @@ function MapSection() {
                 <div className='p-2 md:p-6 border-[2px] rounded-xl'>
                     <p className='text-[20px] font-bold'>Find a resource near you</p>
                     <div className='bg-slate-200 p-3 rounded-lg mt-3 flex items-center gap-4'>
-                        <Image src={searchIcon} width={24} height={24} alt='Search Icon'/>
-                        <input type='text'
-                               placeholder='Current Location'
-                               className='bg-transparent w-full outline-none'
-                               ref={inputRef}
-                               name="streetAddress"
-                               value={input.streetAddress || ""}
-                               onChange={handleChange}
-                               required/>
-                        <button className='p-0 text-white rounded-lg'
-                                onClick={getLoc}>
-                            <Image src={getLocImage} width={30} height={30} alt='Search Icon'/>
+                        <Image src={searchIcon} width={24} height={24} alt='Search Icon' />
+                        <input
+                            type='text'
+                            placeholder='Search Location'
+                            className='bg-transparent w-full outline-none'
+                            ref={inputRef}
+                            name="streetAddress"
+                            value={input.streetAddress || ""}
+                            onChange={handleChange}
+                            required
+                        />
+                        <button className='p-0 text-white rounded-lg' onClick={getLoc}>
+                            <Image src={getLocImage} width={30} height={30} alt='Search Icon' />
                         </button>
                     </div>
-                    <button className=' p-3 bg-black w-full mt-5 text-white rounded-lg'
-                            onClick={handleClick}>Search
+                    <button className='p-3 bg-black w-full mt-5 text-white rounded-lg' onClick={handleClick}>
+                        Search
                     </button>
                 </div>
             </div>
-                <div className='col-span-2' style={{height: '700px'}}>
-                    <div style={{
+            <div className='col-span-2' style={{ height: '700px' }}>
+                <div
+                    style={{
                         height: '100%',
                         width: '100%',
                         border: '1px solid #ccc',
                         borderRadius: '8px',
-                        overflow: 'hidden'
-                    }}>
-                        <MapContainer
-                            style={{height: '100%', width: '100%'}}
-                            center={center}
-                            zoom={13}
-                            scrollWheelZoom={true}
-                            id="map-container"
-                        >
-                            <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                            />
-
-                            <GetMap />
-                        </MapContainer>
-                    </div>
+                        overflow: 'hidden',
+                    }}
+                >
+                    <MapContainer
+                        style={{ height: '100%', width: '100%' }}
+                        center={center}
+                        zoom={13}
+                        scrollWheelZoom={true}
+                    >
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        {washroomLocations.map((location) => (
+                            <Marker
+                                key={location._id}
+                                position={[location.X_COORDINATE, location.Y_COORDINATE]} // Ensure correct order: [lat, lng]
+                                icon={mapIcon}
+                            >
+                                <Popup>
+                                    <h3>{location.NAME}</h3>
+                                    <p>{location.ADDRESS}</p>
+                                </Popup>
+                            </Marker>
+                        ))}
+                    </MapContainer>
+                    {loading && <p>Loading locations...</p>}
                 </div>
+            </div>
         </div>
     );
 }
