@@ -18,7 +18,7 @@ export const Header = () => {
               <Link href="#tutorial">
                 Tutorial
               </Link>
-              <a href="#">Map</a>
+              <a href="#map">Map</a>
               <a href="#">Contact Us</a>
             </nav>
           </div>

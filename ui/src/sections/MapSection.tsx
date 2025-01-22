@@ -149,7 +149,11 @@ function MapSection() {
     }
 
     return (
-        <div className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5'>
+        <div className="mt-9 mx-auto">
+        <div className="flex justify-center">
+          <h1 className="my-6 text-center text-5xl title">Map</h1>
+        </div>
+        <div id="map" className='p-6 grid grid-cols-1 md:grid-cols-3 gap-5'>
             <div className='col-span-1'>
                 <div className='p-2 md:p-6 border-[2px] rounded-xl'>
                     <p className='text-[20px] font-bold'>Find a resource near you</p>
@@ -196,6 +200,7 @@ function MapSection() {
                             <GetMap />
                         </MapContainer>
                     </div>
+                </div>
                 </div>
         </div>
     );

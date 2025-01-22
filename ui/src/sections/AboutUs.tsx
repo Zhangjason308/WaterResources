@@ -1,4 +1,4 @@
-import teamPhoto from "@/assets/team.png";
+import teamPhoto from "@/assets/team_new.png";
 import Image from "next/image";
 export const AboutUs = () => {
   return (
