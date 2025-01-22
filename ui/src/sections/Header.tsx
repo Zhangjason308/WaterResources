@@ -1,4 +1,4 @@
-import Logo from "../assets/logo-apex.png";
+import Logo from "../assets/ottawa.png";
 import Image from 'next/image';
 import MenuIcon from "../assets/menu.svg";
 import Link from "next/link";
@@ -15,7 +15,9 @@ export const Header = () => {
               <Link href="#about">
                 About Us
               </Link>
-              <a href="#">Tutorial</a>
+              <Link href="#tutorial">
+                Tutorial
+              </Link>
               <a href="#">Map</a>
               <a href="#">Contact Us</a>
             </nav>

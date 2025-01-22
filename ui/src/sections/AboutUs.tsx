@@ -1,4 +1,4 @@
-import teamPhoto from "@/assets/team-photo.png";
+import teamPhoto from "@/assets/team.png";
 import Image from "next/image";
 export const AboutUs = () => {
   return (
@@ -10,7 +10,7 @@ export const AboutUs = () => {
           </div>
           <div className="md:flex-inline">
           <p className="text-lg leading-[30px] traking-tight mt-5 md:min-w-[400px] md:mr-10">
-            Welcome to the City of Ottawa Water Resources Web App! We are a team
+            Welcome to H2G0! The City of Ottawa Water Resources Web App. We are a team
             of 4th-year Software Engineering students from Carleton
             University—Jason Zhang, Caleb Lui-Yee, Marwan Zeid, Triton Crowley,
             and Eric Wang. This initiative is part of our capstone project,
