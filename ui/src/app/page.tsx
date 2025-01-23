@@ -2,7 +2,11 @@
 
 import { Header } from "@/sections/Header";
 import { Hero } from "@/sections/Hero";
+import { AboutUs } from "@/sections/AboutUs";
+
 import MapSection from "@/sections/MapSection";
+import { Tutorial } from "@/sections/Tutorial";
+import { Footer } from "@/sections/Footer";
 import 'leaflet/dist/leaflet.css';
 import dynamic from "next/dynamic";
 
@@ -15,10 +19,12 @@ export default function Home({ params }: { params: { event: string }}) {
 
     return (
     <>
-        <Header />
-        <Hero />
-        <DynamicMap />
-        
+      <Header />
+      <Hero />
+      <AboutUs />
+      <DynamicMap />
+      <Tutorial/>
+      <Footer/>
     </>
   );
 }
