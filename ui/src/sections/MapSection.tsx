@@ -136,7 +136,9 @@ function MapSection() {
     function handleClick() {
         const lat = input.latitude;
         const long = input.longitude;
-        mapFly(lat, long);
+        if (lat !== undefined && long !== undefined) {
+            mapFly(lat, long);
+        }
     }
 
     function mapFly(lat: number, long: number) {
