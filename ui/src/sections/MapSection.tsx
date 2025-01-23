@@ -3,16 +3,24 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLoadScript } from "@react-google-maps/api";
 import searchIcon from '@/assets/search-image.png';
 import getLocImage from '@/assets/my-location.png';
-import mapPin from '@/assets/placeholder_map_pin.png';
+import washroomPin from '@/assets/bathroom-pin.png';
+import userPin from '@/assets/placeholder_map_pin.png';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L, { icon, Map } from 'leaflet';
 import { fetchLocationData, Washroom_Location, Water_Fountain_Location} from './LocationFunction';
 
+
 const libraries = ["places"];
-const mapIcon = icon({
-    iconUrl: mapPin.src,
-    iconSize: [32, 32]
+const washroomIcon = icon({
+    iconUrl: washroomPin.src,
+    iconSize: [48, 48]
 });
+
+const userIcon = icon({
+    iconUrl: userPin.src,
+    iconSize: [48, 48]
+});
+
 
 let currentLocationLayer: L.Marker;
 
@@ -143,7 +151,7 @@ function MapSection() {
 
     function mapFly(lat: number, long: number) {
         if (!currentLocationLayer) {
-            currentLocationLayer = L.marker([lat, long], { icon: mapIcon }).addTo(map);
+            currentLocationLayer = L.marker([lat, long], { icon: userIcon }).addTo(map);
         }
         if (lat && long) {
             map.flyTo([lat, long], 16);
@@ -215,7 +223,7 @@ function MapSection() {
                                 <Marker
                                     key={location._id}
                                     position={[location.Y_COORDINATE, location.X_COORDINATE]} 
-                                    icon={mapIcon}
+                                    icon={washroomIcon}
                                 >
                                     <Popup>
                                     <div>
