@@ -9,6 +9,7 @@ import { Tutorial } from "@/sections/Tutorial";
 import { Footer } from "@/sections/Footer";
 import 'leaflet/dist/leaflet.css';
 import dynamic from "next/dynamic";
+import {UserForm} from "@/sections/UserForm";
 
 const DynamicMap = dynamic(() => import('@/sections/MapSection'), {
     ssr: false,
@@ -24,6 +25,7 @@ export default function Home({ params }: { params: { event: string }}) {
       <AboutUs />
       <DynamicMap />
       <Tutorial/>
+        <UserForm />
       <Footer/>
     </>
   );
